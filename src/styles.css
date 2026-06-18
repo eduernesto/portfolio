@@ -185,6 +185,22 @@ nav {
   cursor: crosshair;
 }
 
+/* PAGE LOADER */
+#loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #080808;
+  border-bottom: 4px solid var(--red);
+  transform: translateY(0);
+  transition: transform 0.5s cubic-bezier(0.86, 0, 0.07, 1);
+  pointer-events: none;
+}
+
+#loader.hide {
+  transform: translateY(-100%);
+}
+
 /* HERO */
 #hero {
   min-height: 100vh;

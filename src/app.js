@@ -1,3 +1,8 @@
+// ─── PAGE LOADER ─────────────────────────────────────────────────────
+window.addEventListener('load', () => {
+  document.getElementById('loader').classList.add('hide');
+});
+
 // ─── STATE ───────────────────────────────────────────────────────────
 let audioCtx, analyser, dataArray, bufferLength;
 let isAudioReady = false;
