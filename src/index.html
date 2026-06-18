@@ -1,63 +1,254 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portfolio SPA</title>
-  <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eduardo Alvarez · Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div id="app">
-    <header class="header">
-      <h1>My Portfolio</h1>
-      <nav>
-        <a href="#about">About</a>
-        <a href="#stack">Stack</a>
-        <a href="#experience">Experience</a>
-        <a href="#projects">Projects</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </header>
 
-    <main>
-      <section id="home" class="section">
-        <h2>Welcome</h2>
-        <p>This is my portfolio SPA.</p>
-      </section>
-
-      <section id="about" class="section">
-        <h2>About Me</h2>
-        <p>Information about me will go here.</p>
-      </section>
-
-      <section id="stack" class="section">
-        <h2>Stack</h2>
-        <p>Technical skills and tools I work with.</p>
-      </section>
-
-      <section id="experience" class="section">
-        <h2>Experience</h2>
-        <p>Work experience and background.</p>
-      </section>
-
-      <section id="projects" class="section">
-        <h2>Projects</h2>
-        <div id="projects-container">
-          Loading projects...
-        </div>
-      </section>
-
-      <section id="contact" class="section">
-        <h2>Contact</h2>
-        <p>Contact information will go here.</p>
-      </section>
-    </main>
-
-    <footer>
-      <p>&copy; 2026 My Portfolio</p>
-    </footer>
+<nav>
+  <div class="nav-logo">E.A.</div>
+  <ul class="nav-links">
+    <li><a href="#hero">ABOUT ME</a></li>
+    <li><a href="#audio-section">AUDIO</a></li>
+    <li><a href="#building-section">EDIFICIO</a></li>
+    <li><a href="#code-section">SISTEMA</a></li>
+    <li><a href="#manifesto">MANIFIESTO</a></li>
+  </ul>
+  <div class="music-player">
+    <div class="player-cover" id="playerCover"></div>
+    <div class="player-info">
+      <span class="player-song" id="playerSong">SIN REPRODUCCIÓN</span>
+    </div>
+    <div class="player-controls">
+      <button id="prevBtn" class="player-btn">⏮</button>
+      <button id="playBtn" class="player-btn play-btn">▶</button>
+      <button id="nextBtn" class="player-btn">⏭</button>
+    </div>
+    <div class="volume-wrap">
+      <button id="volBtn" class="player-btn">🔊</button>
+      <div class="volume-slider" id="volSlider">
+        <input type="range" id="volRange" min="0" max="1" step="0.05" value="0.5">
+      </div>
+    </div>
   </div>
+</nav>
 
-  <script src="app.js"></script>
+<!-- HERO -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-eyebrow">// software developer · systems engineering · v1.0.0</div>
+    <h1 class="hero-title glitch">
+      EDUARDO<br>
+      <span class="line2">ALVAREZ</span><br>
+      <span class="line3">DESARROLLO Y SOLUCIONO</span>
+    </h1>
+    <p class="hero-sub">// creative, professional software developer and Systems Engineering student<br>// based in Miraflores, Lima, Peru<br>// React · Angular · Java · TypeScript · C# · Python · n8n · AI</p>
+    <div class="hero-cta">
+      <button class="btn btn-primary">DOWNLOAD CV</button>
+      <button class="btn btn-ghost">CONTACT</button>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-item">EDAD<span class="red">21</span></div>
+    <div class="stat-item">IDIOMAS<span>ES/EN</span></div>
+    <div class="stat-item">SEMESTRE<span>7°</span></div>
+    <div class="stat-item">FREQ<span id="hFreq" class="cyan">—</span></div>
+    <div class="stat-item">BPM<span id="hBpm">—</span></div>
+    <div class="stat-item">CAPAS<span id="hLayerCount">7</span></div>
+  </div>
+  <div class="scroll-hint">// SCROLL PARA CONTINUAR ↓</div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-inner">
+    &nbsp;&nbsp;&nbsp;// BRUTALISMO DIGITAL · ARQUITECTURA SONORA · CÓDIGO VIVO · FRECUENCIA MODULADA · CONCRETO DIGITAL · CAPAS DE SONIDO · BEAT REACTIVO · SISTEMA ACTIVO ·&nbsp;&nbsp;&nbsp;// BRUTALISMO DIGITAL · ARQUITECTURA SONORA · CÓDIGO VIVO · FRECUENCIA MODULADA · CONCRETO DIGITAL · CAPAS DE SONIDO · BEAT REACTIVO · SISTEMA ACTIVO ·
+  </div>
+</div>
+
+<!-- AUDIO -->
+<section id="audio-section">
+  <div>
+    <div class="section-label">// módulo de audio</div>
+    <h2 class="section-title">MUSICAL<br>EN VIVO</h2>
+    <p class="section-body">El sistema analiza la música en reproducción usando la Web Audio API. Cada frecuencia se mapea a una capa del edificio. Los bajos mueven la base. Los agudos iluminan la cúpula. El ritmo sacude el concreto.</p>
+  </div>
+  <div class="mic-panel">
+    <div class="freq-bars" id="freqBars"></div>
+    <div class="audio-data">
+      <div class="data-cell">
+        <div class="data-cell-label">VOL. PLAYER</div>
+        <div class="data-cell-val red" id="dVol">50</div>
+      </div>
+      <div class="data-cell">
+        <div class="data-cell-label">BPM</div>
+        <div class="data-cell-val cyan" id="dFreq">—</div>
+      </div>
+      <div class="data-cell">
+        <div class="data-cell-label">BAJOS</div>
+        <div class="data-cell-val" id="dBass">0</div>
+      </div>
+      <div class="data-cell">
+        <div class="data-cell-label">MEDIOS</div>
+        <div class="data-cell-val" id="dMid">0</div>
+      </div>
+      <div class="data-cell">
+        <div class="data-cell-label">AGUDOS</div>
+        <div class="data-cell-val" id="dHigh">0</div>
+      </div>
+      <div class="data-cell">
+        <div class="data-cell-label">CAPAS ACT.</div>
+        <div class="data-cell-val" id="dLayers">7</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BUILDING -->
+<section id="building-section">
+  <div class="section-label">// edificio brutalista</div>
+  <h2 class="section-title">CAPAS<br>SONORAS</h2>
+  <canvas id="building-canvas"></canvas>
+  <div class="building-controls">
+    <span style="font-size:9px;letter-spacing:2px;color:var(--gray4);">CAPAS VISIBLES:</span>
+    <button class="layer-toggle on red-t" data-layer="0" onclick="toggleLayer(this,0)">PENTHOUSE</button>
+    <button class="layer-toggle on" data-layer="1" onclick="toggleLayer(this,1)">FREQ_07</button>
+    <button class="layer-toggle on red-t" data-layer="2" onclick="toggleLayer(this,2)">FREQ_BAND</button>
+    <button class="layer-toggle on cyan-t" data-layer="3" onclick="toggleLayer(this,3)">MID_RANGE</button>
+    <button class="layer-toggle on" data-layer="4" onclick="toggleLayer(this,4)">BASS_CORE</button>
+    <button class="layer-toggle on" data-layer="5" onclick="toggleLayer(this,5)">CODE_LAYER</button>
+    <button class="layer-toggle on" data-layer="6" onclick="toggleLayer(this,6)">FOUNDATION</button>
+  </div>
+</section>
+
+<!-- WAVEFORM -->
+<section id="waveform-section">
+  <div class="section-label">// forma de onda</div>
+  <h2 class="section-title" style="margin-bottom:32px;">OSCILADOR</h2>
+  <canvas id="wave-canvas"></canvas>
+  <div class="wave-labels">
+    <span>0ms</span><span>TIEMPO →</span><span>BUFFER</span>
+  </div>
+</section>
+
+<!-- CODE SECTION -->
+<section id="code-section">
+  <div class="section-label">// documentación técnica</div>
+  <h2 class="section-title">SISTEMA<br>ACTIVO</h2>
+  <div class="code-grid">
+    <div class="code-card red">
+      <div class="card-num">MODULE_01</div>
+      <div class="card-title">AudioContext API</div>
+      <div class="card-code">
+        <span class="kw">const</span> ctx = <span class="kw">new</span><br>
+        &nbsp;AudioContext()<br>
+        <span class="kw">const</span> src = ctx<br>
+        &nbsp;.createMediaStream<br>
+        &nbsp;Source(stream)<br>
+        analyser.fftSize = <span class="num">2048</span>
+      </div>
+      <div class="card-live">Captura el audio del micrófono y lo transforma en datos de frecuencia usando FFT de 2048 puntos.</div>
+    </div>
+    <div class="code-card cyan">
+      <div class="card-num">MODULE_02</div>
+      <div class="card-title">Mapeo de Capas</div>
+      <div class="card-code">
+        floors.map((f, i) => {<br>
+        &nbsp;<span class="kw">const</span> band =<br>
+        &nbsp;&nbsp;freqData[i * step]<br>
+        &nbsp;f.pulse = band / <span class="num">255</span><br>
+        &nbsp;<span class="fn">renderFloor</span>(f)<br>
+        })
+      </div>
+      <div class="card-live">Cada piso del edificio recibe datos de una banda de frecuencia específica del espectro.</div>
+    </div>
+    <div class="code-card white">
+      <div class="card-num">MODULE_03</div>
+      <div class="card-title">Render Loop</div>
+      <div class="card-code">
+        <span class="fn">requestAnimation</span><br>
+        Frame(() => {<br>
+        &nbsp;analyser.getByteFreq<br>
+        &nbsp;uencyData(buf)<br>
+        &nbsp;<span class="fn">drawBuilding</span>(buf)<br>
+        &nbsp;<span class="fn">drawWave</span>(buf)<br>
+        })
+      </div>
+      <div class="card-live">El loop de animación corre a 60fps, actualizando el edificio y la forma de onda en cada frame.</div>
+    </div>
+    <div class="code-card red">
+      <div class="card-num">MODULE_04</div>
+      <div class="card-title">Detector de Beat</div>
+      <div class="card-code">
+        <span class="kw">const</span> bass =<br>
+        &nbsp;avg(buf.slice(<span class="num">0</span>,<span class="num">8</span>))<br>
+        <span class="kw">if</span> (bass > threshold)<br>
+        &nbsp;beatHistory.push(<br>
+        &nbsp;&nbsp;Date.now())<br>
+        bpm = <span class="fn">calcBPM</span>(hist)
+      </div>
+      <div class="card-live">Detecta el ritmo analizando los picos de energía en las frecuencias graves del espectro.</div>
+    </div>
+    <div class="code-card cyan">
+      <div class="card-num">MODULE_05</div>
+      <div class="card-title">Código Vivo</div>
+      <div class="card-code">
+        <span class="kw">const</span> glitch =<br>
+        &nbsp;amp > <span class="num">0.8</span><br>
+        &nbsp;&nbsp;? <span class="fn">shakeFloor</span>()<br>
+        &nbsp;&nbsp;: <span class="fn">idle</span>()<br>
+        canvas.fillText(<br>
+        &nbsp;snippet, x, y)
+      </div>
+      <div class="card-live">Los snippets de código que aparecen en las ventanas del edificio son generados en tiempo real.</div>
+    </div>
+    <div class="code-card white">
+      <div class="card-num">MODULE_06</div>
+      <div class="card-title">Modo Simulado</div>
+      <div class="card-code">
+        <span class="kw">if</span> (!micActive) {<br>
+        &nbsp;amp = Math.sin(<br>
+        &nbsp;&nbsp;frame * <span class="num">0.04</span>)<br>
+        &nbsp;beat += bpm/<span class="num">60</span>/<span class="num">60</span><br>
+        &nbsp;<span class="fn">simulateFft</span>()<br>
+        }
+      </div>
+      <div class="card-live">Sin micrófono, el sistema genera datos sintéticos para mantener el edificio animado.</div>
+    </div>
+  </div>
+</section>
+
+<!-- MANIFESTO -->
+<section id="manifesto">
+  <p class="manifesto-text">
+    CÓDIGO LIMPIO, <em>SOLUCIONES REALES.</em><br>
+    INNOVACIÓN CON<br>
+    CADA <em>LÍNEA.</em>
+  </p>
+  <p class="manifesto-sub">// portfolio · 2026 · eduardo alvarez · desarrollo y soluciono</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">E.A.</div>
+  <div style="font-size:9px;letter-spacing:3px;color:var(--gray4);line-height:2.2;">
+    <div style="color:var(--red);">// software developer</div>
+    <div>REACT · ANGULAR · JAVA · TYPESCRIPT · C# · PYTHON</div>
+    <div>N8N · AI · FULL-STACK · IOT</div>
+  </div>
+  <div class="footer-info">
+    <div style="color:var(--gray5);">MIRAFLORES, LIMA · PERU</div>
+    <div>v1.0.0 · E.A.</div>
+  </div>
+</footer>
+
+<audio id="audioPlayer" style="display:none"></audio>
+<script src="app.js"></script>
 </body>
 </html>

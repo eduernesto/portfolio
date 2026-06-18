@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -7,30 +8,34 @@ const PORT = process.env.PORT || 3000;
 // Serve static files from src directory
 app.use(express.static(path.join(__dirname, 'src')));
 
-// API endpoint for portfolio data
-app.get('/api/portfolio', (req, res) => {
-  res.json({
-    name: 'Your Name',
-    title: 'Frontend Developer',
-    bio: 'A passionate developer creating amazing web experiences.',
-    skills: ['HTML', 'CSS', 'JavaScript', 'React', 'Vue'],
-    projects: [
-      {
-        id: 1,
-        title: 'Project 1',
-        description: 'Description of project 1',
-        image: 'assets/project1.jpg',
-        link: '#'
-      },
-      {
-        id: 2,
-        title: 'Project 2',
-        description: 'Description of project 2',
-        image: 'assets/project2.jpg',
-        link: '#'
-      }
-    ]
-  });
+// API endpoint to list music files with metadata from playlist.json
+app.get('/api/music', (req, res) => {
+  const musicDir = path.join(__dirname, 'src', 'assets', 'music');
+  const configPath = path.join(musicDir, 'playlist.json');
+  let config = {};
+  try {
+    config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+  } catch (e) { config = []; }
+  try {
+    const audioExts = ['.mp3', '.wav', '.ogg', '.flac', '.m4a', '.aac'];
+    const files = fs.readdirSync(musicDir).filter(f => audioExts.includes(path.extname(f).toLowerCase()));
+    const result = files.map(f => {
+      const cfg = config.find(c => c.file === f);
+      const basename = path.basename(f, path.extname(f));
+      const coverFile = cfg && cfg.cover ? cfg.cover : null;
+      const coverExt = coverFile ? path.extname(coverFile).toLowerCase() : '';
+      const validCover = ['.jpg', '.jpeg', '.png'].includes(coverExt);
+      return {
+        name: cfg && cfg.title ? cfg.title : basename,
+        file: f,
+        path: `assets/music/${f}`,
+        cover: coverFile && validCover ? `assets/music/${coverFile}` : null
+      };
+    });
+    res.json(result);
+  } catch (e) {
+    res.json([]);
+  }
 });
 
 // Serve index.html for all routes (SPA routing)
