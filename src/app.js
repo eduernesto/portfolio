@@ -212,6 +212,8 @@ function toggleLayer(btn, idx) {
 // ─── HERO CANVAS ─────────────────────────────────────────────────────
 const heroCanvas = document.getElementById('hero-canvas');
 const hctx = heroCanvas.getContext('2d');
+const heroImg = new Image();
+heroImg.src = 'assets/edifico.png';
 
 function resizeHero() {
   heroCanvas.width = heroCanvas.offsetWidth;
@@ -264,6 +266,15 @@ function drawHero(data) {
 
   document.getElementById('hFreq').textContent = isAudioReady ? Math.round(440 + globalAmp * 300) + 'hz' : '—';
   document.getElementById('hBpm').textContent = isAudioReady ? calcBPM() : '—';
+
+  // Overlay building image
+  if (heroImg.complete && heroImg.naturalWidth > 0) {
+    const imgW = Math.min(w * 0.41, 450);
+    const imgH = imgW * (heroImg.naturalHeight / heroImg.naturalWidth);
+    const ix = (w - imgW) * 0.82;
+    const iy = h - imgH - 2;
+    hctx.drawImage(heroImg, ix, iy, imgW, imgH);
+  }
 }
 
 // ─── BUILDING CANVAS ─────────────────────────────────────────────────
