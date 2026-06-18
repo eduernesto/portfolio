@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRUT/AL · Arquitectura Sonora</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #ff2d55;
+  --cyan: #00d4ff;
+  --white: #f0f0f0;
+  --black: #080808;
+  --gray1: #111;
+  --gray2: #1a1a1a;
+  --gray3: #2a2a2a;
+  --gray4: #444;
+  --gray5: #888;
+  --mono: 'Space Mono', monospace;
+  --ibm: 'IBM Plex Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--mono);
+  overflow-x: hidden;
+  cursor: crosshair;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: var(--red); }
+
+/* NAV */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  border-bottom: 2px solid var(--gray3);
+  background: rgba(8,8,8,0.92);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 52px;
+}
+
+.nav-logo {
+  font-family: var(--ibm);
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--red);
+  letter-spacing: -1px;
+  text-shadow: 2px 2px 0 var(--white);
+}
+
+.nav-links {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+}
+
+.nav-links a {
+  text-decoration: none;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--gray5);
+  text-transform: uppercase;
+  transition: color 0.15s;
+}
+
+.nav-links a:hover { color: var(--red); }
+
+.nav-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--gray4);
+}
+
+.dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--gray4);
+  transition: background 0.3s;
+}
+
+.dot.live { background: var(--red); animation: pulse-dot 1s infinite; }
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* HERO */
+#hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-top: 52px;
+}
+
+#hero-canvas {
+  position: absolute;
+  top: 52px; left: 0; right: 0; bottom: 0;
+  width: 100%; height: calc(100% - 52px);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 60px 40px 0;
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  font-size: 9px;
+  letter-spacing: 5px;
+  color: var(--red);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.hero-title {
+  font-family: var(--ibm);
+  font-size: clamp(48px, 9vw, 110px);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -4px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.hero-title .line2 { color: var(--red); }
+.hero-title .line3 { color: var(--gray4); font-size: 0.5em; letter-spacing: -1px; }
+
+.hero-sub {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--gray4);
+  margin-bottom: 40px;
+  max-width: 420px;
+  line-height: 2;
+}
+
+.hero-cta {
+  display: flex;
+  gap: 16px;
+  pointer-events: all;
+  flex-wrap: wrap;
+}
+
+.btn {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 12px 24px;
+  border: none;
+  cursor: crosshair;
+  font-weight: 700;
+  transition: all 0.12s;
+}
+
+.btn-primary {
+  background: var(--red);
+  color: var(--black);
+}
+
+.btn-primary:hover {
+  background: var(--white);
+  color: var(--black);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--white);
+  border: 2px solid var(--gray3);
+}
+
+.btn-ghost:hover {
+  border-color: var(--white);
+}
+
+.hero-stats {
+  position: absolute;
+  right: 40px;
+  bottom: 80px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: right;
+  pointer-events: none;
+}
+
+.stat-item { font-size: 9px; letter-spacing: 2px; color: var(--gray4); }
+.stat-item span { display: block; font-size: 22px; color: var(--white); font-weight: 700; letter-spacing: -1px; }
+.stat-item span.red { color: var(--red); }
+
+.scroll-hint {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  font-size: 8px;
+  letter-spacing: 4px;
+  color: var(--gray4);
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(6px); }
+}
+
+/* AUDIO SECTION */
+#audio-section {
+  min-height: 100vh;
+  background: var(--gray1);
+  border-top: 3px solid var(--gray3);
+  padding: 80px 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.section-label {
+  font-size: 9px;
+  letter-spacing: 5px;
+  color: var(--red);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-family: var(--ibm);
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -2px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.section-body {
+  font-size: 11px;
+  line-height: 2;
+  color: var(--gray5);
+  margin-bottom: 32px;
+  font-family: var(--ibm);
+  font-weight: 300;
+}
+
+.mic-panel {
+  background: var(--black);
+  border: 2px solid var(--gray3);
+  padding: 32px;
+}
+
+.mic-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--gray5);
+}
+
+#mic-btn {
+  width: 80px; height: 80px;
+  border-radius: 0;
+  background: var(--gray2);
+  border: 2px solid var(--gray3);
+  color: var(--white);
+  font-size: 28px;
+  cursor: crosshair;
+  margin-bottom: 24px;
+  transition: all 0.15s;
+  display: block;
+}
+
+#mic-btn:hover { border-color: var(--red); }
+#mic-btn.active { background: var(--red); border-color: var(--red); }
+
+.freq-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 100px;
+  margin-bottom: 20px;
+}
+
+.freq-bar {
+  flex: 1;
+  background: var(--gray3);
+  min-height: 2px;
+  transition: height 0.05s ease;
+}
+
+.freq-bar:nth-child(3n+1) { background: var(--red); }
+.freq-bar:nth-child(3n+2) { background: var(--cyan); }
+
+.audio-data {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+.data-cell {
+  background: var(--gray1);
+  border: 1px solid var(--gray3);
+  padding: 12px;
+}
+
+.data-cell-label { font-size: 8px; letter-spacing: 2px; color: var(--gray4); margin-bottom: 4px; }
+.data-cell-val { font-size: 18px; font-weight: 700; color: var(--white); letter-spacing: -1px; }
+.data-cell-val.red { color: var(--red); }
+.data-cell-val.cyan { color: var(--cyan); }
+
+/* BUILDING SECTION */
+#building-section {
+  min-height: 100vh;
+  background: var(--black);
+  border-top: 3px solid var(--gray3);
+  padding: 80px 40px 40px;
+  position: relative;
+}
+
+#building-canvas {
+  width: 100%;
+  height: 600px;
+  display: block;
+}
+
+.building-controls {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.layer-toggle {
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  background: transparent;
+  color: var(--gray5);
+  border: 1px solid var(--gray3);
+  cursor: crosshair;
+  transition: all 0.12s;
+}
+
+.layer-toggle.on { color: var(--black); background: var(--white); border-color: var(--white); }
+.layer-toggle.on.red-t { background: var(--red); border-color: var(--red); }
+.layer-toggle.on.cyan-t { background: var(--cyan); border-color: var(--cyan); color: var(--black); }
+
+/* CODE SECTION */
+#code-section {
+  background: var(--gray1);
+  border-top: 3px solid var(--gray3);
+  padding: 80px 40px;
+}
+
+.code-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin-top: 40px;
+}
+
+.code-card {
+  background: var(--black);
+  border: 1px solid var(--gray3);
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.code-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+
+.code-card.red::before { background: var(--red); }
+.code-card.cyan::before { background: var(--cyan); }
+.code-card.white::before { background: var(--white); }
+
+.card-num {
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--gray4);
+  margin-bottom: 12px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+
+.card-code {
+  font-family: var(--ibm);
+  font-size: 10px;
+  line-height: 1.9;
+  color: var(--gray4);
+  margin-bottom: 16px;
+}
+
+.card-code .kw { color: var(--red); }
+.card-code .fn { color: var(--cyan); }
+.card-code .str { color: #a8ff78; }
+.card-code .num { color: #f5a623; }
+.card-live { font-size: 11px; color: var(--gray5); line-height: 1.8; font-family: var(--ibm); font-weight: 300; }
+
+/* MANIFESTO SECTION */
+#manifesto {
+  background: var(--red);
+  padding: 100px 40px;
+  text-align: center;
+}
+
+.manifesto-text {
+  font-family: var(--ibm);
+  font-size: clamp(28px, 5vw, 64px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -2px;
+  color: var(--black);
+  text-transform: uppercase;
+  max-width: 900px;
+  margin: 0 auto 40px;
+}
+
+.manifesto-text em {
+  font-style: normal;
+  color: var(--white);
+  text-shadow: 3px 3px 0 var(--black);
+}
+
+.manifesto-sub {
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: rgba(0,0,0,0.5);
+  text-transform: uppercase;
+}
+
+/* WAVEFORM SECTION */
+#waveform-section {
+  background: var(--black);
+  border-top: 3px solid var(--gray3);
+  padding: 80px 40px;
+}
+
+#wave-canvas { width: 100%; height: 200px; display: block; }
+
+.wave-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: var(--gray4);
+}
+
+/* FOOTER */
+footer {
+  background: var(--gray1);
+  border-top: 3px solid var(--gray3);
+  padding: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.footer-logo {
+  font-family: var(--ibm);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--red);
+  letter-spacing: -1px;
+  text-shadow: 2px 2px 0 var(--white);
+}
+
+.footer-info {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--gray4);
+  line-height: 2;
+  text-align: right;
+}
+
+/* TICKER */
+.ticker-wrap {
+  border-top: 1px solid var(--gray3);
+  border-bottom: 1px solid var(--gray3);
+  overflow: hidden;
+  padding: 10px 0;
+  background: var(--black);
+}
+
+.ticker-inner {
+  display: inline-block;
+  white-space: nowrap;
+  animation: ticker 22s linear infinite;
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: var(--gray4);
+}
+
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* GLITCH */
+@keyframes glitch {
+  0%, 95%, 100% { transform: none; clip-path: none; }
+  96% { transform: translateX(-3px); clip-path: inset(20% 0 60% 0); }
+  97% { transform: translateX(3px); clip-path: inset(60% 0 10% 0); color: var(--cyan); }
+  98% { transform: none; }
+}
+
+.glitch { animation: glitch 6s infinite; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  #audio-section { grid-template-columns: 1fr; }
+  .code-grid { grid-template-columns: 1fr; }
+  .hero-stats { display: none; }
+  nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  #hero-canvas { height: 60vh; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">BRUT/AL</div>
+  <ul class="nav-links">
+    <li><a href="#hero">INICIO</a></li>
+    <li><a href="#audio-section">AUDIO</a></li>
+    <li><a href="#building-section">EDIFICIO</a></li>
+    <li><a href="#code-section">SISTEMA</a></li>
+    <li><a href="#manifesto">MANIFIESTO</a></li>
+  </ul>
+  <div class="nav-status">
+    <div class="dot" id="navDot"></div>
+    <span id="navStatus">INACTIVO</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-eyebrow">// arquitectura sonora digital · v1.0.0</div>
+    <h1 class="hero-title glitch">
+      MÚSICA<br>
+      <span class="line2">COMO</span><br>
+      <span class="line3">CÓDIGO</span>
+    </h1>
+    <p class="hero-sub">// una interfaz brutalista que responde al sonido<br>// cada capa del edificio es una frecuencia<br>// el concreto digital vibra con tu voz</p>
+    <div class="hero-cta">
+      <button class="btn btn-primary" onclick="document.getElementById('mic-btn').click(); document.getElementById('audio-section').scrollIntoView({behavior:'smooth'})">ACTIVAR MICRÓFONO</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('building-section').scrollIntoView({behavior:'smooth'})">VER EDIFICIO</button>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-item">CAPAS<span class="red" id="hLayerCount">7</span></div>
+    <div class="stat-item">FREQ<span id="hFreq">—</span></div>
+    <div class="stat-item">BPM<span id="hBpm">—</span></div>
+  </div>
+  <div class="scroll-hint">// SCROLL PARA CONTINUAR ↓</div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-inner">
+    &nbsp;&nbsp;&nbsp;// BRUTALISMO DIGITAL · ARQUITECTURA SONORA · CÓDIGO VIVO · FRECUENCIA MODULADA · CONCRETO DIGITAL · CAPAS DE SONIDO · BEAT REACTIVO · SISTEMA ACTIVO ·&nbsp;&nbsp;&nbsp;// BRUTALISMO DIGITAL · ARQUITECTURA SONORA · CÓDIGO VIVO · FRECUENCIA MODULADA · CONCRETO DIGITAL · CAPAS DE SONIDO · BEAT REACTIVO · SISTEMA ACTIVO ·
+  </div>
+</div>
+
+<!-- AUDIO -->
+<section id="audio-section">
+  <div>
+    <div class="section-label">// módulo de audio</div>
+    <h2 class="section-title">MICRÓFONO<br>EN VIVO</h2>
+    <p class="section-body">El sistema captura tu micrófono en tiempo real usando la Web Audio API. Cada frecuencia se mapea a una capa del edificio. Los bajos mueven la base. Los agudos iluminan la cúpula. El ritmo sacude el concreto.</p>
+    <div class="section-body" style="color: var(--gray4); font-size: 10px;">
+      <span style="color: var(--red);">nota:</span> se requiere permiso de micrófono.<br>
+      el audio nunca sale de tu navegador.<br>
+      procesado localmente · sin servidor · sin red.
+    </div>
+  </div>
+  <div class="mic-panel">
+    <div class="mic-status">
+      <div class="dot" id="micDot"></div>
+      <span id="micStatusText">MICRÓFONO INACTIVO</span>
+    </div>
+    <button id="mic-btn" title="Activar/desactivar micrófono">🎤</button>
+    <div class="freq-bars" id="freqBars"></div>
+    <div class="audio-data">
+      <div class="data-cell">
+        <div class="data-cell-label">VOLUMEN</div>
+        <div class="data-cell-val red" id="dVol">0</div>
+      </div>
+      <div class="data-cell">
+        <div class="data-cell-label">FREQ PICO</div>
+        <div class="data-cell-val cyan" id="dFreq">—</div>
+      </div>
+      <div class="data-cell">
+        <div class="data-cell-label">BAJOS</div>
+        <div class="data-cell-val" id="dBass">0</div>
+      </div>
+      <div class="data-cell">
+        <div class="data-cell-label">MEDIOS</div>
+        <div class="data-cell-val" id="dMid">0</div>
+      </div>
+      <div class="data-cell">
+        <div class="data-cell-label">AGUDOS</div>
+        <div class="data-cell-val" id="dHigh">0</div>
+      </div>
+      <div class="data-cell">
+        <div class="data-cell-label">CAPAS ACT.</div>
+        <div class="data-cell-val" id="dLayers">7</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BUILDING -->
+<section id="building-section">
+  <div class="section-label">// edificio brutalista</div>
+  <h2 class="section-title">CAPAS<br>SONORAS</h2>
+  <canvas id="building-canvas"></canvas>
+  <div class="building-controls">
+    <span style="font-size:9px;letter-spacing:2px;color:var(--gray4);">CAPAS VISIBLES:</span>
+    <button class="layer-toggle on red-t" data-layer="0" onclick="toggleLayer(this,0)">PENTHOUSE</button>
+    <button class="layer-toggle on" data-layer="1" onclick="toggleLayer(this,1)">FREQ_07</button>
+    <button class="layer-toggle on red-t" data-layer="2" onclick="toggleLayer(this,2)">FREQ_BAND</button>
+    <button class="layer-toggle on cyan-t" data-layer="3" onclick="toggleLayer(this,3)">MID_RANGE</button>
+    <button class="layer-toggle on" data-layer="4" onclick="toggleLayer(this,4)">BASS_CORE</button>
+    <button class="layer-toggle on" data-layer="5" onclick="toggleLayer(this,5)">CODE_LAYER</button>
+    <button class="layer-toggle on" data-layer="6" onclick="toggleLayer(this,6)">FOUNDATION</button>
+  </div>
+</section>
+
+<!-- WAVEFORM -->
+<section id="waveform-section">
+  <div class="section-label">// forma de onda</div>
+  <h2 class="section-title" style="margin-bottom:32px;">OSCILADOR</h2>
+  <canvas id="wave-canvas"></canvas>
+  <div class="wave-labels">
+    <span>0ms</span><span>TIEMPO →</span><span>BUFFER</span>
+  </div>
+</section>
+
+<!-- CODE SECTION -->
+<section id="code-section">
+  <div class="section-label">// documentación técnica</div>
+  <h2 class="section-title">SISTEMA<br>ACTIVO</h2>
+  <div class="code-grid">
+    <div class="code-card red">
+      <div class="card-num">MODULE_01</div>
+      <div class="card-title">AudioContext API</div>
+      <div class="card-code">
+        <span class="kw">const</span> ctx = <span class="kw">new</span><br>
+        &nbsp;AudioContext()<br>
+        <span class="kw">const</span> src = ctx<br>
+        &nbsp;.createMediaStream<br>
+        &nbsp;Source(stream)<br>
+        analyser.fftSize = <span class="num">2048</span>
+      </div>
+      <div class="card-live">Captura el audio del micrófono y lo transforma en datos de frecuencia usando FFT de 2048 puntos.</div>
+    </div>
+    <div class="code-card cyan">
+      <div class="card-num">MODULE_02</div>
+      <div class="card-title">Mapeo de Capas</div>
+      <div class="card-code">
+        floors.map((f, i) => {<br>
+        &nbsp;<span class="kw">const</span> band =<br>
+        &nbsp;&nbsp;freqData[i * step]<br>
+        &nbsp;f.pulse = band / <span class="num">255</span><br>
+        &nbsp;<span class="fn">renderFloor</span>(f)<br>
+        })
+      </div>
+      <div class="card-live">Cada piso del edificio recibe datos de una banda de frecuencia específica del espectro.</div>
+    </div>
+    <div class="code-card white">
+      <div class="card-num">MODULE_03</div>
+      <div class="card-title">Render Loop</div>
+      <div class="card-code">
+        <span class="fn">requestAnimation</span><br>
+        Frame(() => {<br>
+        &nbsp;analyser.getByteFreq<br>
+        &nbsp;uencyData(buf)<br>
+        &nbsp;<span class="fn">drawBuilding</span>(buf)<br>
+        &nbsp;<span class="fn">drawWave</span>(buf)<br>
+        })
+      </div>
+      <div class="card-live">El loop de animación corre a 60fps, actualizando el edificio y la forma de onda en cada frame.</div>
+    </div>
+    <div class="code-card red">
+      <div class="card-num">MODULE_04</div>
+      <div class="card-title">Detector de Beat</div>
+      <div class="card-code">
+        <span class="kw">const</span> bass =<br>
+        &nbsp;avg(buf.slice(<span class="num">0</span>,<span class="num">8</span>))<br>
+        <span class="kw">if</span> (bass > threshold)<br>
+        &nbsp;beatHistory.push(<br>
+        &nbsp;&nbsp;Date.now())<br>
+        bpm = <span class="fn">calcBPM</span>(hist)
+      </div>
+      <div class="card-live">Detecta el ritmo analizando los picos de energía en las frecuencias graves del espectro.</div>
+    </div>
+    <div class="code-card cyan">
+      <div class="card-num">MODULE_05</div>
+      <div class="card-title">Código Vivo</div>
+      <div class="card-code">
+        <span class="kw">const</span> glitch =<br>
+        &nbsp;amp > <span class="num">0.8</span><br>
+        &nbsp;&nbsp;? <span class="fn">shakeFloor</span>()<br>
+        &nbsp;&nbsp;: <span class="fn">idle</span>()<br>
+        canvas.fillText(<br>
+        &nbsp;snippet, x, y)
+      </div>
+      <div class="card-live">Los snippets de código que aparecen en las ventanas del edificio son generados en tiempo real.</div>
+    </div>
+    <div class="code-card white">
+      <div class="card-num">MODULE_06</div>
+      <div class="card-title">Modo Simulado</div>
+      <div class="card-code">
+        <span class="kw">if</span> (!micActive) {<br>
+        &nbsp;amp = Math.sin(<br>
+        &nbsp;&nbsp;frame * <span class="num">0.04</span>)<br>
+        &nbsp;beat += bpm/<span class="num">60</span>/<span class="num">60</span><br>
+        &nbsp;<span class="fn">simulateFft</span>()<br>
+        }
+      </div>
+      <div class="card-live">Sin micrófono, el sistema genera datos sintéticos para mantener el edificio animado.</div>
+    </div>
+  </div>
+</section>
+
+<!-- MANIFESTO -->
+<section id="manifesto">
+  <p class="manifesto-text">
+    EL SONIDO ES <em>ARQUITECTURA.</em><br>
+    EL CONCRETO VIBRA CON<br>
+    CADA <em>FRECUENCIA.</em>
+  </p>
+  <p class="manifesto-sub">// brutalismo · 2024 · código abierto · sonido libre</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">BRUT/AL</div>
+  <div style="font-size:9px;letter-spacing:3px;color:var(--gray4);line-height:2.2;">
+    <div style="color:var(--red);">// arquitectura sonora</div>
+    <div>WEB AUDIO API · CANVAS 2D · VANILLA JS</div>
+    <div>SIN FRAMEWORKS · SIN DEPENDENCIAS</div>
+  </div>
+  <div class="footer-info">
+    <div style="color:var(--gray5);">PROCESADO LOCALMENTE</div>
+    <div>v1.0.0 · BRUT/AL</div>
+  </div>
+</footer>
+
+<script>
+// ─── STATE ───────────────────────────────────────────────────────────
+let audioCtx, analyser, micStream, dataArray, bufferLength;
+let micActive = false;
+let animFrame;
+let simFrame = 0;
+let simBeat = 0;
+let simBpm = 120;
+let beatHistory = [];
+let layerVisible = [true,true,true,true,true,true,true];
+let globalAmp = 0;
+let globalBass = 0;
+
+// ─── INIT FREQ BARS ──────────────────────────────────────────────────
+const freqBarsEl = document.getElementById('freqBars');
+const NUM_BARS = 32;
+let freqBarEls = [];
+for (let i = 0; i < NUM_BARS; i++) {
+  const b = document.createElement('div');
+  b.className = 'freq-bar';
+  freqBarsEl.appendChild(b);
+  freqBarEls.push(b);
+}
+
+// ─── MICROPHONE ──────────────────────────────────────────────────────
+document.getElementById('mic-btn').addEventListener('click', toggleMic);
+
+async function toggleMic() {
+  if (micActive) {
+    stopMic();
+  } else {
+    await startMic();
+  }
+}
+
+async function startMic() {
+  try {
+    micStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 2048;
+    analyser.smoothingTimeConstant = 0.8;
+    bufferLength = analyser.frequencyBinCount;
+    dataArray = new Uint8Array(bufferLength);
+    const source = audioCtx.createMediaStreamSource(micStream);
+    source.connect(analyser);
+    micActive = true;
+    document.getElementById('mic-btn').classList.add('active');
+    document.getElementById('mic-btn').textContent = '🔴';
+    document.getElementById('micStatusText').textContent = 'MICRÓFONO ACTIVO';
+    document.getElementById('micDot').classList.add('live');
+    document.getElementById('navDot').classList.add('live');
+    document.getElementById('navStatus').textContent = 'EN VIVO';
+  } catch(e) {
+    document.getElementById('micStatusText').textContent = 'PERMISO DENEGADO';
+  }
+}
+
+function stopMic() {
+  if (micStream) micStream.getTracks().forEach(t => t.stop());
+  if (audioCtx) audioCtx.close();
+  micActive = false;
+  document.getElementById('mic-btn').classList.remove('active');
+  document.getElementById('mic-btn').textContent = '🎤';
+  document.getElementById('micStatusText').textContent = 'MICRÓFONO INACTIVO';
+  document.getElementById('micDot').classList.remove('live');
+  document.getElementById('navDot').classList.remove('live');
+  document.getElementById('navStatus').textContent = 'INACTIVO';
+}
+
+function getAudioData() {
+  if (micActive && analyser) {
+    analyser.getByteFrequencyData(dataArray);
+    return dataArray;
+  }
+  // Simulate
+  const sim = new Uint8Array(1024);
+  simFrame++;
+  simBeat += simBpm / 60 / 60;
+  const beat = (Math.sin(simBeat * Math.PI * 2) + 1) / 2;
+  const kick = beat > 0.85 ? 1 : 0;
+  if (kick > 0 && (beatHistory.length === 0 || simFrame - beatHistory[beatHistory.length-1] > 20)) {
+    beatHistory.push(simFrame);
+    if (beatHistory.length > 8) beatHistory.shift();
+  }
+  for (let i = 0; i < 1024; i++) {
+    const f = i / 1024;
+    const bass = i < 80 ? (kick * 180 + Math.random() * 40) : 0;
+    const wave = Math.sin(simFrame * 0.04 + i * 0.15) * 80 + 80;
+    const noise = Math.random() * 30;
+    sim[i] = Math.min(255, Math.round(bass + wave * (1-f) + noise));
+  }
+  if (simFrame % 180 === 0) simBpm = [90,100,110,120,128,140][Math.floor(Math.random()*6)];
+  return sim;
+}
+
+function calcBPM() {
+  if (beatHistory.length < 2) return simBpm;
+  const gaps = [];
+  for (let i = 1; i < beatHistory.length; i++) gaps.push(beatHistory[i] - beatHistory[i-1]);
+  const avg = gaps.reduce((a,b)=>a+b,0)/gaps.length;
+  return Math.round(60 / (avg / 60));
+}
+
+// ─── LAYER TOGGLE ───────────────────────────────────────────────────
+function toggleLayer(btn, idx) {
+  layerVisible[idx] = !layerVisible[idx];
+  btn.classList.toggle('on');
+  document.getElementById('dLayers').textContent = layerVisible.filter(Boolean).length;
+  document.getElementById('hLayerCount').textContent = layerVisible.filter(Boolean).length;
+}
+
+// ─── HERO CANVAS ─────────────────────────────────────────────────────
+const heroCanvas = document.getElementById('hero-canvas');
+const hctx = heroCanvas.getContext('2d');
+
+function resizeHero() {
+  heroCanvas.width = heroCanvas.offsetWidth;
+  heroCanvas.height = heroCanvas.offsetHeight;
+}
+resizeHero();
+window.addEventListener('resize', () => { resizeHero(); resizeBuilding(); resizeWave(); });
+
+let heroFrame = 0;
+function drawHero(data) {
+  heroFrame++;
+  const w = heroCanvas.width, h = heroCanvas.height;
+  hctx.fillStyle = 'rgba(8,8,8,0.25)';
+  hctx.fillRect(0, 0, w, h);
+
+  // Code rain
+  hctx.font = '11px IBM Plex Mono, monospace';
+  const cols = Math.floor(w / 15);
+  const codeChars = '01{}[]<>=;const let async';
+  for (let i = 0; i < cols; i++) {
+    const y = ((heroFrame * 0.5 + i * 19) % (h + 20));
+    const ch = codeChars[(Math.floor(heroFrame * 0.08 + i * 2.7)) % codeChars.length];
+    const alpha = 0.05 + (i % 5 === 0 ? 0.07 : 0);
+    hctx.fillStyle = i % 4 === 0 ? `rgba(255,45,85,${alpha})` : `rgba(240,240,240,${alpha})`;
+    hctx.fillText(ch, i * 15, y);
+  }
+
+  // Grid lines
+  hctx.strokeStyle = 'rgba(42,42,42,0.4)';
+  hctx.lineWidth = 0.5;
+  for (let x = 0; x < w; x += 60) {
+    hctx.beginPath(); hctx.moveTo(x, 0); hctx.lineTo(x, h); hctx.stroke();
+  }
+  for (let y = 0; y < h; y += 60) {
+    hctx.beginPath(); hctx.moveTo(0, y); hctx.lineTo(w, y); hctx.stroke();
+  }
+
+  // Sound rings
+  const cx = w * 0.75, cy = h * 0.55;
+  const amp = globalAmp;
+  for (let i = 0; i < 5; i++) {
+    const r = ((heroFrame * 2 + i * 60) % 300);
+    const a = Math.max(0, (1 - r/300) * 0.3 * (0.3 + amp * 0.7));
+    hctx.strokeStyle = i%2===0 ? `rgba(255,45,85,${a})` : `rgba(0,212,255,${a})`;
+    hctx.lineWidth = 1.5;
+    hctx.beginPath();
+    hctx.ellipse(cx, cy, r * 1.4, r * 0.4, 0, 0, Math.PI * 2);
+    hctx.stroke();
+  }
+
+  // Mini building silhouette in hero
+  const bx = w * 0.72, by = h * 0.78;
+  const bw = Math.min(300, w * 0.35);
+  const floors2 = [0.4,0.5,0.6,0.7,0.8,0.9,1.0];
+  let cy2 = by;
+  floors2.forEach((fw, i) => {
+    const fh = 16 + (i===6?6:0);
+    const pulseIdx = Math.floor((i / floors2.length) * (data.length * 0.5));
+    const p = (data[pulseIdx] || 0) / 255;
+    const fx = bx - (bw * fw / 2);
+    const col = i===2 ? `rgba(255,45,85,${0.6+p*0.4})` : i===3 ? `rgba(0,212,255,${0.3+p*0.3})` : `rgba(240,240,240,${0.08+p*0.12})`;
+    hctx.fillStyle = col;
+    hctx.fillRect(fx, cy2 - fh, bw * fw, fh - 1);
+    cy2 -= fh;
+  });
+
+  document.getElementById('hFreq').textContent = micActive ? Math.round(440 + globalAmp * 300) + 'hz' : '—';
+  document.getElementById('hBpm').textContent = micActive ? calcBPM() : '—';
+}
+
+// ─── BUILDING CANVAS ─────────────────────────────────────────────────
+const buildingCanvas = document.getElementById('building-canvas');
+const bctx = buildingCanvas.getContext('2d');
+
+function resizeBuilding() {
+  buildingCanvas.width = buildingCanvas.offsetWidth;
+  buildingCanvas.height = buildingCanvas.offsetHeight || 600;
+}
+resizeBuilding();
+
+const FLOORS = [
+  { name:'PENTHOUSE',   widthRatio:0.38, h:42, col:'#f0f0f0', tc:'#080808', wins:6,  freq:0.95 },
+  { name:'LAYER_07',    widthRatio:0.44, h:48, col:'#1a1a1a', tc:'#ff2d55', wins:7,  freq:0.82 },
+  { name:'FREQ_BAND',   widthRatio:0.48, h:38, col:'#ff2d55', tc:'#080808', wins:8,  freq:0.65 },
+  { name:'MID_RANGE',   widthRatio:0.52, h:52, col:'#111',    tc:'#00d4ff', wins:9,  freq:0.48 },
+  { name:'BASS_CORE',   widthRatio:0.56, h:44, col:'#1c1c1c', tc:'#f0f0f0', wins:10, freq:0.30 },
+  { name:'CODE_LAYER',  widthRatio:0.60, h:56, col:'#080808', tc:'#ff2d55', wins:10, freq:0.15 },
+  { name:'FOUNDATION',  widthRatio:0.64, h:38, col:'#222',    tc:'#888',    wins:11, freq:0.05 },
+];
+
+const snippets2 = ['beat()','freq++','render()','0xFF','amp*2','draw()','sync()','bass()','{wave}','loop()'];
+let snipIdx2 = 0;
+let snipTimer = 0;
+
+function drawBuildingMain(data) {
+  const w = buildingCanvas.width, h = buildingCanvas.height;
+  bctx.clearRect(0, 0, w, h);
+
+  bctx.fillStyle = '#080808';
+  bctx.fillRect(0, 0, w, h);
+
+  // Background grid
+  bctx.strokeStyle = 'rgba(30,30,30,0.8)';
+  bctx.lineWidth = 0.5;
+  for (let x = 0; x < w; x += 40) {
+    bctx.beginPath(); bctx.moveTo(x,0); bctx.lineTo(x,h); bctx.stroke();
+  }
+  for (let y = 0; y < h; y += 40) {
+    bctx.beginPath(); bctx.moveTo(0,y); bctx.lineTo(w,y); bctx.stroke();
+  }
+
+  // Sound rings from ground
+  const cx = w / 2;
+  const groundY = h - 40;
+  for (let i = 0; i < 5; i++) {
+    const r = ((simFrame * 1.8 + i * 55) % (w * 0.45));
+    const a = Math.max(0, (1 - r/(w*0.45)) * 0.25 * (0.2 + globalAmp*0.8));
+    bctx.strokeStyle = i%2===0 ? `rgba(255,45,85,${a})` : `rgba(0,212,255,${a})`;
+    bctx.lineWidth = 1.5;
+    bctx.beginPath();
+    bctx.ellipse(cx, groundY, r, r * 0.18, 0, 0, Math.PI*2);
+    bctx.stroke();
+  }
+
+  // Ground line
+  bctx.strokeStyle = '#333';
+  bctx.lineWidth = 2;
+  bctx.beginPath(); bctx.moveTo(40, groundY); bctx.lineTo(w-40, groundY); bctx.stroke();
+  for (let x = 40; x < w-40; x += 18) {
+    bctx.strokeStyle = 'rgba(50,50,50,0.5)';
+    bctx.lineWidth = 1;
+    bctx.beginPath(); bctx.moveTo(x, groundY); bctx.lineTo(x, groundY+15); bctx.stroke();
+  }
+
+  // Floors
+  let cursor = groundY;
+  snipTimer++;
+  if (snipTimer % 70 === 0) snipIdx2++;
+
+  FLOORS.forEach((fl, i) => {
+    if (!layerVisible[i]) { cursor -= fl.h + 2; return; }
+
+    const freqIdx = Math.floor(fl.freq * (data.length - 1));
+    const rawPulse = (data[freqIdx] || 0) / 255;
+    const pulse = rawPulse * 0.8 + globalAmp * 0.2;
+
+    const offsetY = Math.sin(simFrame * 0.03 + i * 0.7) * 2 * pulse;
+    const flW = w * fl.widthRatio;
+    const flX = cx - flW / 2;
+    const flY = cursor - fl.h + offsetY;
+
+    // Shadow layer (depth effect)
+    bctx.fillStyle = 'rgba(0,0,0,0.4)';
+    bctx.fillRect(flX + 4, flY + 4, flW, fl.h);
+
+    // Main floor
+    bctx.fillStyle = fl.col;
+    bctx.fillRect(flX, flY, flW, fl.h);
+
+    // Horizontal accent lines (texture)
+    if (fl.h > 40) {
+      bctx.strokeStyle = 'rgba(255,255,255,0.04)';
+      bctx.lineWidth = 0.5;
+      for (let ly = flY + 10; ly < flY + fl.h - 6; ly += 8) {
+        bctx.beginPath(); bctx.moveTo(flX, ly); bctx.lineTo(flX+flW, ly); bctx.stroke();
+      }
+    }
+
+    // Border
+    bctx.strokeStyle = i===2 ? '#ff2d55' : i===3 ? '#00d4ff' : '#333';
+    bctx.lineWidth = i===2 ? 2 : 0.5;
+    bctx.strokeRect(flX, flY, flW, fl.h);
+
+    // Top accent bar
+    const accentCol = i===2 ? '#ff2d55' : i===3 ? '#00d4ff' : i===0 ? '#f0f0f0' : '#333';
+    bctx.fillStyle = accentCol;
+    bctx.fillRect(flX, flY, flW, 3);
+
+    // Windows
+    const winW = 12, winH = fl.h * 0.42;
+    const winY = flY + fl.h * 0.28;
+    const gap = (flW - fl.wins * winW) / (fl.wins + 1);
+    for (let j = 0; j < fl.wins; j++) {
+      const wx = flX + gap + j * (winW + gap);
+      const brightness = 0.15 + pulse * 0.7 + (j%3===0 ? globalAmp * 0.3 : 0);
+      let wc;
+      if (i===2) wc = `rgba(255,45,85,${brightness})`;
+      else if (i===3) wc = `rgba(0,212,255,${brightness * 0.8})`;
+      else if (i===0) wc = `rgba(255,255,255,${brightness * 0.7})`;
+      else wc = `rgba(240,240,240,${brightness * 0.35})`;
+      bctx.fillStyle = wc;
+      bctx.fillRect(wx, winY, winW - 2, winH);
+      bctx.strokeStyle = 'rgba(255,255,255,0.06)';
+      bctx.lineWidth = 0.5;
+      bctx.strokeRect(wx, winY, winW - 2, winH);
+    }
+
+    // Code snippet in CODE_LAYER
+    if (i===5 && pulse > 0.1) {
+      bctx.font = '8px IBM Plex Mono, monospace';
+      bctx.fillStyle = `rgba(255,45,85,${0.3 + pulse * 0.5})`;
+      bctx.fillText(snippets2[snipIdx2 % snippets2.length], flX + 10, flY + fl.h/2 + 3);
+    }
+
+    // Floor label
+    bctx.font = '700 9px Space Mono, monospace';
+    bctx.fillStyle = fl.tc;
+    bctx.textAlign = 'left';
+    bctx.fillText(fl.name, flX + 10, flY + fl.h/2 + 3);
+
+    // Pulse indicator right side
+    const indW = Math.round(pulse * 40);
+    bctx.fillStyle = i===2 ? 'rgba(255,45,85,0.6)' : 'rgba(240,240,240,0.2)';
+    bctx.fillRect(flX + flW - 50, flY + fl.h/2 - 4, indW, 8);
+
+    cursor = flY;
+  });
+
+  // Antenna
+  const antennaX = cx + 40;
+  const antennaTop = cursor - 60 - globalAmp * 30;
+  bctx.strokeStyle = '#555';
+  bctx.lineWidth = 2;
+  bctx.beginPath(); bctx.moveTo(antennaX, cursor); bctx.lineTo(antennaX, antennaTop); bctx.stroke();
+  bctx.fillStyle = globalAmp > 0.6 ? '#ff2d55' : '#333';
+  bctx.beginPath(); bctx.arc(antennaX, antennaTop, 5, 0, Math.PI*2); bctx.fill();
+  if (globalAmp > 0.5) {
+    bctx.strokeStyle = `rgba(255,45,85,${globalAmp * 0.5})`;
+    bctx.lineWidth = 1;
+    bctx.beginPath(); bctx.arc(antennaX, antennaTop, 12 + globalAmp * 10, 0, Math.PI*2); bctx.stroke();
+  }
+
+  // Side freq bars
+  const leftX = 40, rightX = w - 40;
+  for (let i = 0; i < 7; i++) {
+    const barData = (data[Math.floor(i * data.length / 8)] || 0) / 255;
+    const barH = Math.round(barData * 120);
+    const by2 = groundY - barH;
+    bctx.fillStyle = i%2===0 ? `rgba(255,45,85,${0.4+barData*0.4})` : `rgba(0,212,255,${0.3+barData*0.3})`;
+    bctx.fillRect(leftX - 16 + i*3, by2, 2, barH);
+    bctx.fillRect(rightX + 10 - i*3, by2, 2, barH);
+  }
+}
+
+// ─── WAVEFORM ────────────────────────────────────────────────────────
+const waveCanvas = document.getElementById('wave-canvas');
+const wctx = waveCanvas.getContext('2d');
+
+function resizeWave() {
+  waveCanvas.width = waveCanvas.offsetWidth;
+  waveCanvas.height = 200;
+}
+resizeWave();
+
+let waveHistory = [];
+const WAVE_LEN = 300;
+
+function drawWaveform(data) {
+  const w = waveCanvas.width, h = waveCanvas.height;
+  wctx.fillStyle = 'rgba(8,8,8,0.3)';
+  wctx.fillRect(0, 0, w, h);
+
+  // Center line
+  wctx.strokeStyle = 'rgba(44,44,44,0.6)';
+  wctx.lineWidth = 0.5;
+  wctx.beginPath(); wctx.moveTo(0, h/2); wctx.lineTo(w, h/2); wctx.stroke();
+
+  // Grid
+  for (let x = 0; x < w; x += 60) {
+    wctx.strokeStyle = 'rgba(30,30,30,0.4)';
+    wctx.lineWidth = 0.5;
+    wctx.beginPath(); wctx.moveTo(x, 0); wctx.lineTo(x, h); wctx.stroke();
+  }
+
+  // Collect waveform point
+  let sum = 0;
+  const step = Math.floor(data.length / 8);
+  for (let i = 0; i < 8; i++) sum += (data[i * step] || 0);
+  const avg = (sum / 8 / 255) * 2 - 1;
+  waveHistory.push(avg);
+  if (waveHistory.length > WAVE_LEN) waveHistory.shift();
+
+  // Draw main wave
+  wctx.beginPath();
+  wctx.strokeStyle = '#ff2d55';
+  wctx.lineWidth = 2;
+  waveHistory.forEach((v, i) => {
+    const x = (i / WAVE_LEN) * w;
+    const y = h/2 + v * (h/2 - 10);
+    i === 0 ? wctx.moveTo(x, y) : wctx.lineTo(x, y);
+  });
+  wctx.stroke();
+
+  // Shadow wave
+  wctx.beginPath();
+  wctx.strokeStyle = 'rgba(0,212,255,0.4)';
+  wctx.lineWidth = 1;
+  waveHistory.forEach((v, i) => {
+    const x = (i / WAVE_LEN) * w;
+    const y = h/2 + v * (h/2 - 20) * 0.6;
+    i === 0 ? wctx.moveTo(x, y) : wctx.lineTo(x, y);
+  });
+  wctx.stroke();
+}
+
+// ─── UPDATE UI ───────────────────────────────────────────────────────
+function updateUI(data) {
+  const N = data.length;
+  const bassData = Array.from(data.slice(0, Math.floor(N*0.1)));
+  const midData = Array.from(data.slice(Math.floor(N*0.1), Math.floor(N*0.4)));
+  const highData = Array.from(data.slice(Math.floor(N*0.4), Math.floor(N*0.8)));
+  const allData = Array.from(data);
+
+  const avg = arr => arr.length ? Math.round(arr.reduce((a,b)=>a+b,0)/arr.length) : 0;
+  globalBass = avg(bassData);
+  const midA = avg(midData);
+  const highA = avg(highData);
+  globalAmp = Math.min(1, avg(allData) / 128);
+
+  document.getElementById('dVol').textContent = Math.round(globalAmp * 100);
+  document.getElementById('dFreq').textContent = micActive ? Math.round(440 + globalAmp * 440) + 'hz' : '—';
+  document.getElementById('dBass').textContent = Math.round(globalBass / 2.55);
+  document.getElementById('dMid').textContent = Math.round(midA / 2.55);
+  document.getElementById('dHigh').textContent = Math.round(highA / 2.55);
+  document.getElementById('dLayers').textContent = layerVisible.filter(Boolean).length;
+
+  // Beat detection for mic mode
+  if (micActive && globalBass > 100) {
+    const now = Date.now();
+    if (beatHistory.length === 0 || now - beatHistory[beatHistory.length-1] > 300) {
+      beatHistory.push(now);
+      if (beatHistory.length > 8) beatHistory.shift();
+    }
+  }
+
+  // Freq bars
+  const step = Math.floor(data.length / NUM_BARS);
+  freqBarEls.forEach((b, i) => {
+    const val = data[i * step] || 0;
+    b.style.height = Math.max(2, Math.round(val / 255 * 100)) + 'px';
+  });
+}
+
+// ─── MAIN LOOP ───────────────────────────────────────────────────────
+function mainLoop() {
+  const data = getAudioData();
+  updateUI(data);
+  drawHero(data);
+  drawBuildingMain(data);
+  drawWaveform(data);
+  animFrame = requestAnimationFrame(mainLoop);
+}
+
+mainLoop();
+</script>
+</body>
+</html>
