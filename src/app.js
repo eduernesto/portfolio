@@ -295,49 +295,49 @@ const bctx = buildingCanvas.getContext('2d');
 
 function resizeBuilding() {
   buildingCanvas.width = buildingCanvas.offsetWidth;
-  buildingCanvas.height = buildingCanvas.offsetHeight || 1200;
+  buildingCanvas.height = buildingCanvas.offsetHeight || 1000;
 }
 resizeBuilding();
 
 const FLOORS = [
   {
     name: 'FRONTEND',
-    widthRatio: 0.38, h: 180,
+    widthRatio: 0.42, h: 150,
     col: '#1a1a1a', tc: '#ff2d55', accent: '#ff2d55',
     isData: true,
     skills: [
-      ['React','Intermedio'],['TypeScript','Avanzado'],['JavaScript','Avanzado'],
-      ['Angular','Intermedio'],['Tailwind','Intermedio'],['CSS3','Avanzado'],['HTML5','Avanzado'],
+      ['React','Avanzado'],['TypeScript','Avanzado'],['JavaScript','Experto'],
+      ['Angular','Basico'],['Tailwind','Intermedio'],['CSS3','Avanzado'],['HTML5','Avanzado'],
     ],
   },
   {
     name: 'FOUNDATION',
-    widthRatio: 0.64, h: 40,
+    widthRatio: 0.68, h: 30,
     col: '#222', tc: '#f0f0f0', accent: '#f0f0f0',
     isData: false, skills: [],
-    freq: 0.05, wins: 11,
+    freq: 0.05, wins: 8,
   },
   {
     name: 'BACKEND',
-    widthRatio: 0.48, h: 210,
+    widthRatio: 0.52, h: 170,
     col: '#111', tc: '#00d4ff', accent: '#00d4ff',
     isData: true,
     skills: [
       ['Java','Avanzado'],['Spring Boot','Intermedio'],['C#','Avanzado'],['.NET','Intermedio'],
-      ['Node.js','Avanzado'],['Python','Avanzado'],['C++','Intermedio'],
+      ['Node.js','Avanzado'],['Python','Experto'],['C++','Intermedio'],
       ['REST APIs','Experto'],['JWT / Auth','Intermedio'],
     ],
   },
   {
     name: 'BASS_CORE',
-    widthRatio: 0.68, h: 40,
+    widthRatio: 0.72, h: 30,
     col: '#222', tc: '#888', accent: '#888',
     isData: false, skills: [],
-    freq: 0.30, wins: 12,
+    freq: 0.30, wins: 9,
   },
   {
     name: 'DATABASES',
-    widthRatio: 0.54, h: 160,
+    widthRatio: 0.58, h: 130,
     col: '#1c1c1c', tc: '#f0f0f0', accent: '#f0f0f0',
     isData: true,
     skills: [
@@ -347,14 +347,14 @@ const FLOORS = [
   },
   {
     name: 'MID_RANGE',
-    widthRatio: 0.72, h: 40,
+    widthRatio: 0.76, h: 30,
     col: '#222', tc: '#ff2d55', accent: '#ff2d55',
     isData: false, skills: [],
-    freq: 0.48, wins: 13,
+    freq: 0.48, wins: 10,
   },
   {
     name: 'AUTOMATION',
-    widthRatio: 0.58, h: 110,
+    widthRatio: 0.62, h: 95,
     col: '#080808', tc: '#ff2d55', accent: '#ff2d55',
     isData: true,
     skills: [
@@ -363,14 +363,14 @@ const FLOORS = [
   },
   {
     name: 'TREBLE',
-    widthRatio: 0.76, h: 40,
+    widthRatio: 0.80, h: 30,
     col: '#222', tc: '#00d4ff', accent: '#00d4ff',
     isData: false, skills: [],
-    freq: 0.85, wins: 14,
+    freq: 0.85, wins: 11,
   },
   {
     name: 'DEVOPS',
-    widthRatio: 0.62, h: 160,
+    widthRatio: 0.66, h: 130,
     col: '#1a1a1a', tc: '#00d4ff', accent: '#00d4ff',
     isData: true,
     skills: [
@@ -435,7 +435,7 @@ function drawBuildingMain(data) {
 
     const pulseIdx = Math.floor((i / FLOORS.length) * (data.length * 0.5));
     const rawPulse = (data[pulseIdx] || 0) / 255;
-    const pulse = rawPulse * 0.8 + globalAmp * 0.2;
+    const pulse = rawPulse * 1.2 + globalAmp * 0.4;
 
     const offsetY = fl.isData ? Math.sin(simFrame * 0.03 + i * 0.7) * 2 * pulse : 0;
     const flW = w * fl.widthRatio;
@@ -467,17 +467,17 @@ function drawBuildingMain(data) {
       bctx.fillRect(flX, flY, flW, 3);
 
       // Floor name - top left
-      bctx.font = '700 14px Space Mono, monospace';
+      bctx.font = '700 16px Space Mono, monospace';
       bctx.fillStyle = fl.accent;
       bctx.textAlign = 'left';
-      bctx.fillText(fl.name, flX + 16, flY + 30);
+      bctx.fillText(fl.name, flX + 16, flY + 32);
 
-      // Skills — two-column layout (larger fonts)
-      const pad = 16;
+      // Skills — two-column layout with bars
+      const pad = 14;
       const colW = (flW - pad * 2) / 2;
-      const rowH = 30;
+      const rowH = 26;
       const colStart = flX + pad;
-      const rowStart = flY + 50;
+      const rowStart = flY + 45;
 
       fl.skills.forEach((skill, si) => {
         const col = si % 2;
@@ -486,15 +486,25 @@ function drawBuildingMain(data) {
         const sy = rowStart + row * rowH;
 
         const lvl = levelColors[skill[1]] || { c: '#666', dots: 1 };
-        const dots = '●'.repeat(lvl.dots) + '○'.repeat(4 - lvl.dots);
 
-        bctx.font = '13px IBM Plex Mono, monospace';
+        // Row bg tint by level
+        bctx.fillStyle = `rgba(${lvl.c === '#ffd700' ? '255,215,0' : lvl.c === '#ff2d55' ? '255,45,85' : lvl.c === '#00d4ff' ? '0,212,255' : '102,102,102'},0.08)`;
+        bctx.fillRect(sx, sy - 17, colW - 4, rowH);
+
+        // Skill name
+        bctx.font = '700 13px IBM Plex Mono, monospace';
         bctx.fillStyle = '#f0f0f0';
-        bctx.fillText(skill[0], sx, sy);
+        bctx.fillText(skill[0], sx + 4, sy);
 
-        bctx.font = '11px monospace';
-        bctx.fillStyle = lvl.c;
-        bctx.fillText(dots, sx + colW * 0.6, sy);
+        // Level bar (4 segments)
+        const barX = sx + colW * 0.58;
+        const barW = colW * 0.38;
+        const segW = Math.max(barW / 4 - 2, 4);
+        const segH = 8;
+        for (let b = 0; b < 4; b++) {
+          bctx.fillStyle = b < lvl.dots ? lvl.c : '#2a2a2a';
+          bctx.fillRect(barX + b * (segW + 2), sy - 12, segW, segH);
+        }
       });
 
       // Pulse energy bar (right side)
@@ -506,7 +516,7 @@ function drawBuildingMain(data) {
       // ─── Separator floor (reactive to frequency band) ─────────────
       const freqIdx = Math.floor(fl.freq * (data.length - 1));
       const rawPulse = (data[freqIdx] || 0) / 255;
-      const sepPulse = rawPulse * 0.7 + globalAmp * 0.3;
+      const sepPulse = Math.min(1, rawPulse * 1.5 + globalAmp * 0.5);
 
       bctx.fillStyle = 'rgba(0,0,0,0.4)';
       bctx.fillRect(flX + 3, flY + 3, flW, fl.h);
