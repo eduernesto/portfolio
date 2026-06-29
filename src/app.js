@@ -630,29 +630,67 @@ function drawMobileFloor() {
   const flY = (h - flH) / 2;
 
   const pulse = 0.3 + globalAmp * 0.7;
-  mfCtx.fillStyle = fl.col || '#111';
-  mfCtx.fillRect(flX, flY, flW, flH);
-  mfCtx.fillStyle = `rgba(${fl.accent === '#ff2d55' ? '255,45,85' : fl.accent === '#00d4ff' ? '0,212,255' : '240,240,240'},${0.4 + pulse * 0.6})`;
-  mfCtx.fillRect(flX, flY, flW, 4);
-  mfCtx.strokeStyle = fl.accent;
-  mfCtx.lineWidth = 1.5;
-  mfCtx.strokeRect(flX, flY, flW, flH);
+  const shake = globalAmp * 6;
 
+  // Sound rings behind floor
+  for (let i = 0; i < 5; i++) {
+    const r = ((simFrame * 1.8 + i * 55) % (w * 0.5));
+    const a = Math.max(0, (1 - r/(w*0.5)) * 0.2 * (0.2 + globalAmp*0.8));
+    mfCtx.strokeStyle = i%2===0 ? `rgba(255,45,85,${a})` : `rgba(0,212,255,${a})`;
+    mfCtx.lineWidth = 1.5;
+    mfCtx.beginPath();
+    mfCtx.ellipse(w/2, flY + flH, r, r * 0.18, 0, 0, Math.PI*2);
+    mfCtx.stroke();
+  }
+
+  // Floor shadow (moves with shake)
+  mfCtx.fillStyle = 'rgba(0,0,0,0.5)';
+  mfCtx.fillRect(flX + 4 + shake, flY + 4 + shake, flW, flH);
+
+  // Floor bg (vibrates with shake offset)
+  mfCtx.fillStyle = fl.col || '#111';
+  mfCtx.fillRect(flX + shake * 0.5, flY + shake * 0.3, flW, flH);
+
+  // Texture lines
+  mfCtx.strokeStyle = 'rgba(255,255,255,0.04)';
+  mfCtx.lineWidth = 0.5;
+  for (let ly = flY + 20; ly < flY + flH - 10; ly += 10) {
+    mfCtx.beginPath(); mfCtx.moveTo(flX, ly + shake * 0.2); mfCtx.lineTo(flX+flW, ly + shake * 0.2); mfCtx.stroke();
+  }
+
+  // Accent bar (pulses with music)
+  mfCtx.fillStyle = `rgba(${fl.accent === '#ff2d55' ? '255,45,85' : fl.accent === '#00d4ff' ? '0,212,255' : '240,240,240'},${0.4 + pulse * 0.6})`;
+  mfCtx.fillRect(flX + shake * 0.5, flY + shake * 0.3, flW, 4);
+
+  // Border (pulses width with music)
+  mfCtx.strokeStyle = fl.accent;
+  mfCtx.lineWidth = 1.5 + pulse * 2;
+  mfCtx.strokeRect(flX + shake * 0.5, flY + shake * 0.3, flW, flH);
+
+  // Floor name
   mfCtx.font = '700 22px Space Mono, monospace';
   mfCtx.fillStyle = fl.accent;
   mfCtx.textAlign = 'center';
   mfCtx.fillText(fl.name, w / 2, flY + 32);
 
+  // Skills inside floor
   if (fl.isData && fl.skills) {
     const startY = flY + 52;
     const rowH = 28;
     fl.skills.forEach((skill, si) => {
       const sy = startY + si * rowH;
       const lvl = levelColorsMF[skill[1]] || { c: '#666', dots: 1 };
+
+      // Row bg tint by level
+      mfCtx.fillStyle = `rgba(${lvl.c === '#ffd700' ? '255,215,0' : lvl.c === '#ff2d55' ? '255,45,85' : lvl.c === '#00d4ff' ? '0,212,255' : '102,102,102'},0.08)`;
+      mfCtx.fillRect(flX + 4, sy - 16, flW - 8, rowH);
+
       mfCtx.font = '700 12px IBM Plex Mono, monospace';
       mfCtx.fillStyle = '#f0f0f0';
       mfCtx.textAlign = 'left';
       mfCtx.fillText(skill[0], flX + 16, sy);
+
+      // Level bars
       const bx = flX + flW - 80;
       for (let b = 0; b < 4; b++) {
         mfCtx.fillStyle = b < lvl.dots ? lvl.c : '#2a2a2a';
