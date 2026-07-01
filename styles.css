@@ -517,23 +517,6 @@ nav {
   align-items: center;
 }
 
-.layer-toggle {
-  font-family: var(--mono);
-  font-size: 8px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 8px 14px;
-  background: transparent;
-  color: var(--gray5);
-  border: 1px solid var(--gray3);
-  cursor: crosshair;
-  transition: all 0.12s;
-}
-
-.layer-toggle.on { color: var(--black); background: var(--white); border-color: var(--white); }
-.layer-toggle.on.red-t { background: var(--red); border-color: var(--red); }
-.layer-toggle.on.cyan-t { background: var(--cyan); border-color: var(--cyan); color: var(--black); }
-
 /* CODE SECTION */
 #code-section {
   background: var(--gray1);

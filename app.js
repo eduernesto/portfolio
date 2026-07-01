@@ -213,14 +213,6 @@ function calcBPM() {
   return Math.round(60 / (avg / 60));
 }
 
-// ─── LAYER TOGGLE ────────────────────────────────────────────────────
-function toggleLayer(btn, idx) {
-  layerVisible[idx] = !layerVisible[idx];
-  btn.classList.toggle('on');
-  document.getElementById('dLayers').textContent = layerVisible.filter(Boolean).length;
-  document.getElementById('hLayerCount').textContent = layerVisible.filter(Boolean).length;
-}
-
 // ─── HERO CANVAS ─────────────────────────────────────────────────────
 const heroCanvas = document.getElementById('hero-canvas');
 const hctx = heroCanvas.getContext('2d');
@@ -626,15 +618,10 @@ function drawBuildingMain(data) {
 const mfCanvas = document.getElementById('mf-canvas');
 const mfCtx = mfCanvas && mfCanvas.getContext('2d');
 const mfFloorName = document.getElementById('mfFloorName');
-const mfSkills = document.getElementById('mfSkills');
+
 let mfIndex = 0;
 const mfFloors = FLOORS.filter(f => f.isData);
-const levelColorsMF = {
-  'Basico':    { c: '#666',   dots: 1 },
-  'Intermedio':{ c: '#ffd700', dots: 2 },
-  'Avanzado':  { c: '#ff2d55', dots: 3 },
-  'Experto':   { c: '#00d4ff', dots: 4 },
-};
+
 
 function drawMobileFloor() {
   if (!mfCtx || window.innerWidth > 768) return;
@@ -709,7 +696,7 @@ function drawMobileFloor() {
     const rowH = 28;
     fl.skills.forEach((skill, si) => {
       const sy = startY + si * rowH;
-      const lvl = levelColorsMF[skill[1]] || { c: '#666', dots: 1 };
+      const lvl = levelColors[skill[1]] || { c: '#666', dots: 1 };
 
       // Row bg tint by level
       mfCtx.fillStyle = `rgba(${lvl.c === '#ffd700' ? '255,215,0' : lvl.c === '#ff2d55' ? '255,45,85' : lvl.c === '#00d4ff' ? '0,212,255' : '102,102,102'},0.08)`;
@@ -733,22 +720,17 @@ function drawMobileFloor() {
   mfFloorName.style.color = fl.accent;
 }
 
-function updateMobileFloorHTML() {}
-
 document.getElementById('mfPrev')?.addEventListener('click', () => {
   mfIndex = (mfIndex - 1 + mfFloors.length) % mfFloors.length;
   drawMobileFloor();
-  updateMobileFloorHTML();
 });
 
 document.getElementById('mfNext')?.addEventListener('click', () => {
   mfIndex = (mfIndex + 1) % mfFloors.length;
   drawMobileFloor();
-  updateMobileFloorHTML();
 });
 
 resizeMF();
-updateMobileFloorHTML();
 
 // ─── WAVEFORM ────────────────────────────────────────────────────────
 const waveCanvas = document.getElementById('wave-canvas');
@@ -1034,13 +1016,6 @@ function openProjectOverlay(id) {
   overlayEl.dataset.currentProjId = id;
   overlayEl.classList.add('open');
   document.body.style.overflow = 'hidden';
-}
-
-function closeProjectOverlay() {
-  overlayEl.classList.remove('open');
-  overlayVideo.pause();
-  overlayVideo.src = '';
-  document.body.style.overflow = '';
 }
 
 function closeProjectOverlay() {
