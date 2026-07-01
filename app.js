@@ -946,7 +946,7 @@ const projectsData = [
     ],
     links: [
       { label: 'VER DEMO', url: 'https://lachanchita-web.vercel.app' },
-      { label: 'VER REPOSITORIO', url: '#' },
+      { label: 'VER DOCUMENTACIÓN', url: 'assets/LACHANCHITA_TECNICO.pdf', download: true },
     ],
   },
   {
@@ -967,7 +967,7 @@ const projectsData = [
     ],
     links: [
       { label: 'VER DEMO', url: 'https://plataforma-citas-gukw686dy-eduardoealvarezj.vercel.app' },
-      { label: 'VER REPOSITORIO', url: '#' },
+      { label: 'VER DOCUMENTACIÓN', url: 'assets/VITALDENT_TECNICO.pdf', download: true },
     ],
   },
   {
@@ -1028,7 +1028,7 @@ function openProjectOverlay(id) {
     overlayTechs.style.display = 'none';
   }
   overlayLinks.innerHTML = p.links.map(l =>
-    '<a href="' + l.url + '" class="btn btn-primary overlay-link" target="_blank" rel="noopener">' + l.label + ' →</a>'
+    '<a href="' + l.url + '" class="btn btn-primary overlay-link" ' + (l.download ? 'download' : 'target="_blank" rel="noopener"') + '>' + l.label + ' →</a>'
   ).join('');
 
   overlayEl.dataset.currentProjId = id;
